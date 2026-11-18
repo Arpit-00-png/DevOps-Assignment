@@ -1,0 +1,7 @@
+---
+- name: Restart and verify Task API
+  ansible.builtin.shell:
+    cmd: |
+      kubectl rollout restart deployment/{{ task_api_name }} -n {{ task_api_namespace }} &&
+      kubectl rollout status deployment/{{ task_api_name }} -n {{ task_api_namespace }} --timeout=180s
+  changed_when: true
