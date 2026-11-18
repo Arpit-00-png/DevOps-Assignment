@@ -1,0 +1,11 @@
+---
+- name: Deploy Task API on Kubernetes using Ansible
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    task_api_replicas: 3
+
+  roles:
+    - task_api

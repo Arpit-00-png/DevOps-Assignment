@@ -1,0 +1,24 @@
+---
+- name: Verify Kubernetes cluster connectivity
+  ansible.builtin.command:
+    cmd: kubectl cluster-info
+  changed_when: false
+
+- name: Load Task API image into Minikube
+  ansible.builtin.command:
+    cmd: "minikube image load {{ task_api_image }}"
+  changed_when: false
+
+- name: Apply Kubernetes manifests
+  ansible.builtin.command:
+    cmd: "kubectl apply -f {{ k8s_manifest_dir }}"
+  register: kubectl_apply
+  changed_when: "' created' in kubectl_apply.stdout or ' configured' in kubectl_apply.stdout"
+  notify: Restart and verify Task API
+
+- name: Set desired number of replicas
+  ansible.builtin.command:
+    cmd: "kubectl scale deployment/{{ task_api_name }} --replicas={{ task_api_replicas }} -n {{ task_api_namespace }}"
+  register: scale_result
+  changed_when: "'scaled' in scale_result.stdout"
+  notify: Restart and verify Task API

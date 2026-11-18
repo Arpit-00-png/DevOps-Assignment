@@ -1,0 +1,8 @@
+---
+task_api_name: task-api
+task_api_image: task-api:1.0
+task_api_replicas: 3
+task_api_namespace: default
+
+k8s_manifest_dir: "{{ playbook_dir }}/../k8s"
+task_api_source_dir: "{{ playbook_dir }}/../task-api"
